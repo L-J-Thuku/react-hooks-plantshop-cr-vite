@@ -1,0 +1,88 @@
+{
+  "plants": [
+    {
+      "id": 1,
+      "name": "Monstera Deliciosa",
+      "image": "https://cdn.pixabay.com/photo/2020/04/08/09/03/monstera-5014505_640.jpg",
+      "price": 45.99,
+      "isSoldOut": false
+    },
+    {
+      "id": 2,
+      "name": "Snake Plant",
+      "image": "https://cdn.pixabay.com/photo/2021/12/08/12/53/snake-plant-6855547_640.jpg",
+      "price": 25.99,
+      "isSoldOut": false
+    },
+    {
+      "id": 3,
+      "name": "Fiddle Leaf Fig",
+      "image": "https://cdn.pixabay.com/photo/2019/12/09/10/01/ficus-4683754_640.jpg",
+      "price": 65.99,
+      "isSoldOut": false
+    },
+    {
+      "id": 4,
+      "name": "Aloe Vera",
+      "image": "https://cdn.pixabay.com/photo/2016/10/28/10/32/aloe-vera-1778115_640.jpg",
+      "price": 19.99,
+      "isSoldOut": false
+    },
+    {
+      "id": 5,
+      "name": "Peace Lily",
+      "image": "https://cdn.pixabay.com/photo/2014/10/20/00/41/peace-lily-494757_640.jpg",
+      "price": 35.99,
+      "isSoldOut": true
+    },
+    {
+      "id": 6,
+      "name": "ZZ Plant",
+      "image": "https://cdn.pixabay.com/photo/2019/06/21/07/01/zz-plant-4288489_640.jpg",
+      "price": 39.99,
+      "isSoldOut": false
+    },
+    {
+      "id": 7,
+      "name": "Pothos",
+      "image": "https://cdn.pixabay.com/photo/2020/07/12/08/56/pothos-5396581_640.jpg",
+      "price": 15.99,
+      "isSoldOut": false
+    },
+    {
+      "id": 8,
+      "name": "Jade Plant",
+      "image": "https://cdn.pixabay.com/photo/2016/03/26/17/51/jade-1281556_640.jpg",
+      "price": 22.99,
+      "isSoldOut": false
+    },
+    {
+      "id": 9,
+      "name": "Spider Plant",
+      "image": "https://cdn.pixabay.com/photo/2018/06/06/15/14/spider-plant-3457551_640.jpg",
+      "price": 18.99,
+      "isSoldOut": false
+    },
+    {
+      "id": 10,
+      "name": "Rubber Plant",
+      "image": "https://cdn.pixabay.com/photo/2019/11/10/07/11/rubber-tree-4615179_640.jpg",
+      "price": 42.99,
+      "isSoldOut": false
+    },
+    {
+      "id": 11,
+      "name": "Boston Fern",
+      "image": "https://cdn.pixabay.com/photo/2017/05/17/22/36/fern-2322976_640.jpg",
+      "price": 24.99,
+      "isSoldOut": false
+    },
+    {
+      "id": 12,
+      "name": "Cactus",
+      "image": "https://cdn.pixabay.com/photo/2017/02/06/15/10/cactus-2042995_640.jpg",
+      "price": 12.99,
+      "isSoldOut": false
+    }
+  ]
+}
