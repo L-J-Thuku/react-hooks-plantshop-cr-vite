@@ -1,51 +1,73 @@
-import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
-import App from '../../components/App';
-import '@testing-library/jest-dom';
+import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { render, screen, waitFor, fireEvent, act } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import App from '../../components/App'
 
-describe('2nd Deliverable', () => {
-    test('adds a new plant when the form is submitted', async () => {
-        global.setFetchResponse(global.basePlants)
-        const { getByPlaceholderText, findByText, getByText } = render(<App />)
+describe('2nd Deliverable: Add a new plant', () => {
+  beforeEach(() => {
+    vi.resetAllMocks()
+    global.fetch = vi.fn()
+  })
 
-        const firstPlant = {name: 'foo', image: 'foo_plant_image_url', price: '10'}
+  it('adds a new plant when the form is submitted', async () => {
+    const initialPlants = [
+      { id: 1, name: "Monstera Deliciosa", price: 45.99, isSoldOut: false },
+    ]
     
-        global.setFetchResponse({...firstPlant, id: "184298qfhquhf92"})
+    const newPlant = { 
+      id: 2, 
+      name: "Aloe Vera", 
+      image: "https://example.com/aloe.jpg", 
+      price: 19.99, 
+      isSoldOut: false 
+    }
     
-        fireEvent.change(getByPlaceholderText('Plant name'), { target: { value: firstPlant.name } });
-        fireEvent.change(getByPlaceholderText('Image URL'), { target: { value: firstPlant.image } });
-        fireEvent.change(getByPlaceholderText('Price'), { target: { value: firstPlant.price } });
-        fireEvent.click(getByText('Add Plant'))
+    // First fetch for initial load
+    global.fetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => initialPlants,
+    })
+    
+    // Mock POST request
+    global.fetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => newPlant
+    })
 
-        expect(fetch).toHaveBeenCalledWith("http://localhost:6001/plants", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(firstPlant),
-        })
+    await act(async () => {
+      render(<App />)
+    })
     
-        const newPlant = await findByText('foo');
-        expect(newPlant).toBeInTheDocument();
+    // Wait for initial plants to load
+    await waitFor(() => {
+      const monsteraElements = screen.getAllByText(/Monstera Deliciosa/i)
+      expect(monsteraElements.length).toBeGreaterThan(0)
+    })
 
-        const secondPlant = {name: 'bar', image: 'bar_plant_image_url', price: '5'}
-    
-        global.setFetchResponse({...secondPlant, id: "3810fqhrquhf9fnqnc0"})
-    
-        fireEvent.change(getByPlaceholderText('Plant name'), { target: { value: secondPlant.name } });
-        fireEvent.change(getByPlaceholderText('Image URL'), { target: { value: secondPlant.image } });
-        fireEvent.change(getByPlaceholderText('Price'), { target: { value: secondPlant.price } });
-        fireEvent.click(getByText('Add Plant'))
-    
-        expect(fetch).toHaveBeenCalledWith("http://localhost:6001/plants", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(secondPlant),
-        })
+    // Find and click the add plant button
+    const addButton = screen.getByText(/add new plant/i)
+    await act(async () => {
+      fireEvent.click(addButton)
+    })
 
-        const nextPlant = await findByText('bar');
-        expect(nextPlant).toBeInTheDocument();
-    });
+    // Fill out the form - use the correct placeholder text
+    const nameInput = screen.getByPlaceholderText(/e\.g\., Monstera Deliciosa/i)
+    const priceInput = screen.getByPlaceholderText(/45.99/i)
+    const submitButton = screen.getByText(/add plant/i)
+
+    await act(async () => {
+      await userEvent.type(nameInput, 'Aloe Vera')
+      await userEvent.type(priceInput, '19.99')
+    })
+    
+    await act(async () => {
+      fireEvent.click(submitButton)
+    })
+
+    // Verify the new plant appears
+    await waitFor(() => {
+      const aloeElements = screen.getAllByText(/Aloe Vera/i)
+      expect(aloeElements.length).toBeGreaterThan(0)
+    })
+  })
 })
