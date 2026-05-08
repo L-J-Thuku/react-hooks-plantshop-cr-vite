@@ -3,58 +3,23 @@
     {
       "id": 1,
       "name": "Monstera Deliciosa",
-      "image": "https://placehold.co/600x400/2e7d32/white?text=🌿+Monstera",
+      "image": "https://placehold.co/400x400?text=🌿",
       "price": 45.99,
       "isSoldOut": false
     },
     {
       "id": 2,
       "name": "Snake Plant",
-      "image": "https://placehold.co/600x400/2e7d32/white?text=🐍+Snake+Plant",
+      "image": "https://placehold.co/400x400?text=🐍",
       "price": 25.99,
       "isSoldOut": false
     },
     {
       "id": 3,
       "name": "Fiddle Leaf Fig",
-      "image": "https://placehold.co/600x400/2e7d32/white?text=🎻+Fiddle+Leaf",
+      "image": "https://placehold.co/400x400?text=🎻",
       "price": 65.99,
-      "isSoldOut": false
-    },
-    {
-      "id": 4,
-      "name": "Aloe Vera",
-      "image": "https://placehold.co/600x400/2e7d32/white?text=🌵+Aloe+Vera",
-      "price": 19.99,
-      "isSoldOut": false
-    },
-    {
-      "id": 5,
-      "name": "Peace Lily",
-      "image": "https://placehold.co/600x400/2e7d32/white?text=🤍+Peace+Lily",
-      "price": 35.99,
       "isSoldOut": true
-    },
-    {
-      "id": 6,
-      "name": "ZZ Plant",
-      "image": "https://placehold.co/600x400/2e7d32/white?text=ZZ+Plant",
-      "price": 39.99,
-      "isSoldOut": false
-    },
-    {
-      "id": 7,
-      "name": "Pothos",
-      "image": "https://placehold.co/600x400/2e7d32/white?text=🍃+Pothos",
-      "price": 15.99,
-      "isSoldOut": false
-    },
-    {
-      "id": 8,
-      "name": "Jade Plant",
-      "image": "https://placehold.co/600x400/2e7d32/white?text=💚+Jade+Plant",
-      "price": 22.99,
-      "isSoldOut": false
     }
   ]
 }

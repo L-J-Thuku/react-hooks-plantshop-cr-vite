@@ -26,6 +26,7 @@ describe('Plant Shop Tests', () => {
       })
       
       await waitFor(() => {
+        // Use getAllByText since the name appears twice (in gradient div and h3)
         const monsteraElements = screen.getAllByText(/Monstera Deliciosa/i)
         expect(monsteraElements.length).toBeGreaterThan(0)
         const snakeElements = screen.getAllByText(/Snake Plant/i)
@@ -113,7 +114,7 @@ describe('Plant Shop Tests', () => {
         expect(monsteraElements.length).toBeGreaterThan(0)
       })
 
-      const searchInput = screen.getByPlaceholderText(/search/i)
+      const searchInput = screen.getByPlaceholderText(/type a name to search/i)
       
       await act(async () => {
         await userEvent.type(searchInput, 'Monstera')

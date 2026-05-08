@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { render, screen, waitFor, fireEvent } from '@testing-library/react'
+import { render, screen, waitFor, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import App from '../../components/App'
 
@@ -13,7 +13,6 @@ describe('4th Deliverable: Search plants', () => {
     const mockPlants = [
       { id: 1, name: "Monstera Deliciosa", price: 45.99, isSoldOut: false },
       { id: 2, name: "Snake Plant", price: 25.99, isSoldOut: false },
-      { id: 3, name: "Fiddle Leaf Fig", price: 65.99, isSoldOut: true },
     ]
     
     global.fetch.mockResolvedValueOnce({
@@ -21,9 +20,11 @@ describe('4th Deliverable: Search plants', () => {
       json: async () => mockPlants,
     })
 
-    render(<App />)
+    await act(async () => {
+      render(<App />)
+    })
     
-    // Wait for plants to load - use getAllByText since there are multiple elements
+    // Wait for plants to load
     await waitFor(() => {
       const monsteraElements = screen.getAllByText(/Monstera Deliciosa/i)
       expect(monsteraElements.length).toBeGreaterThan(0)
@@ -32,23 +33,25 @@ describe('4th Deliverable: Search plants', () => {
     })
 
     // Find search input
-    const searchInput = screen.getByPlaceholderText(/search/i)
+    const searchInput = screen.getByPlaceholderText(/type a name to search/i)
     
     // Type "Monstera" in search
-    await userEvent.type(searchInput, 'Monstera')
+    await act(async () => {
+      await userEvent.type(searchInput, 'Monstera')
+    })
 
     // Should only show Monstera
     await waitFor(() => {
       const monsteraElements = screen.getAllByText(/Monstera Deliciosa/i)
       expect(monsteraElements.length).toBeGreaterThan(0)
-      
-      // Snake plant should not be in the document
       const snakeElements = screen.queryAllByText(/Snake Plant/i)
       expect(snakeElements.length).toBe(0)
     })
 
     // Clear search
-    await userEvent.clear(searchInput)
+    await act(async () => {
+      await userEvent.clear(searchInput)
+    })
 
     // Should show all plants again
     await waitFor(() => {

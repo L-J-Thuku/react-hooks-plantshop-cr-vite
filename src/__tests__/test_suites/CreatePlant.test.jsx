@@ -38,7 +38,7 @@ describe('2nd Deliverable: Add a new plant', () => {
       render(<App />)
     })
     
-    // Wait for initial plants to load
+    // Wait for initial plants to load - use getAllByText
     await waitFor(() => {
       const monsteraElements = screen.getAllByText(/Monstera Deliciosa/i)
       expect(monsteraElements.length).toBeGreaterThan(0)
@@ -50,7 +50,7 @@ describe('2nd Deliverable: Add a new plant', () => {
       fireEvent.click(addButton)
     })
 
-    // Fill out the form - use the correct placeholder text
+    // Fill out the form
     const nameInput = screen.getByPlaceholderText(/e\.g\., Monstera Deliciosa/i)
     const priceInput = screen.getByPlaceholderText(/45.99/i)
     const submitButton = screen.getByText(/add plant/i)
