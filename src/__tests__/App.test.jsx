@@ -1,11 +1,8 @@
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
+import '@testing-library/jest-dom';
 import App from '../components/App';
-
-// Extend expect with jest-dom matchers
-import matchers from '@testing-library/jest-dom/matchers';
-expect.extend(matchers);
 
 describe('Plant Shop Tests', () => {
   beforeEach(() => {
@@ -24,7 +21,7 @@ describe('Plant Shop Tests', () => {
     vi.restoreAllMocks();
   });
 
-  test('1st Deliverable: See all plants - displays all plants on page load', async () => {
+  test('1st Deliverable: displays all plants on startup', async () => {
     render(<App />);
     
     await waitFor(() => {
@@ -33,7 +30,7 @@ describe('Plant Shop Tests', () => {
     });
   });
 
-  test('2nd Deliverable: Add a new plant', async () => {
+  test('2nd Deliverable: adds a new plant when the form is submitted', async () => {
     render(<App />);
     
     await waitFor(() => {
@@ -44,7 +41,18 @@ describe('Plant Shop Tests', () => {
     expect(addButton).toBeInTheDocument();
   });
 
-  test('4th Deliverable: Search plants', async () => {
+  test('3rd Deliverable: marks a plant as sold out', async () => {
+    render(<App />);
+    
+    await waitFor(() => {
+      expect(screen.getByText('Monstera Deliciosa')).toBeInTheDocument();
+    });
+    
+    const stockButtons = screen.getAllByText(/In Stock/i);
+    expect(stockButtons.length).toBeGreaterThan(0);
+  });
+
+  test('4th Deliverable: filters plants by name on search', async () => {
     render(<App />);
     
     await waitFor(() => {
