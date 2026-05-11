@@ -1,25 +1,26 @@
 {
   "plants": [
     {
-      "id": 1,
+      "id": "1",
       "name": "Monstera Deliciosa",
-      "image": "https://placehold.co/400x400?text=🌿",
+      "image": "https://images.unsplash.com/photo-1614594977925-df803aa3c5e2?w=300",
       "price": 45.99,
-      "isSoldOut": false
+      "inStock": true
     },
     {
-      "id": 2,
+      "id": "2",
       "name": "Snake Plant",
-      "image": "https://placehold.co/400x400?text=🐍",
+      "image": "https://images.unsplash.com/photo-1593482892630-05b4a2efef3e?w=300",
       "price": 25.99,
-      "isSoldOut": false
+      "inStock": true
     },
     {
-      "id": 3,
-      "name": "Fiddle Leaf Fig",
-      "image": "https://placehold.co/400x400?text=🎻",
-      "price": 65.99,
-      "isSoldOut": true
+      "name": "rose",
+      "image": "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=200",
+      "price": 78.09,
+      "inStock": true,
+      "id": "mlZvTgyAS2A"
     }
-  ]
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }
