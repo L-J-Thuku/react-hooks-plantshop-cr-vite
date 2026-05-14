@@ -1,25 +1,25 @@
+import React, { useState } from "react";
 
-import React from 'react';
+function PlantCard({ plant }) {
+  const [isSoldOut, setIsSoldOut] = useState(false);
 
-function PlantCard({ plant, onUpdateStock }) {
-  const handleStockToggle = () => {
-    onUpdateStock(plant.id, !plant.inStock);
-  };
+  const toggleStock = () => setIsSoldOut(!isSoldOut);
 
   return (
-    <div className="plant-card" data-testid="plant-item">
+    <li className="card" data-testid="plant-item">
       <img src={plant.image} alt={plant.name} />
-      <h3>{plant.name}</h3>
-      <p>${plant.price}</p>
-      <button 
-        className={plant.inStock ? 'in-stock' : 'out-of-stock'}
-        onClick={handleStockToggle}
-      >
-        {plant.inStock ? 'In Stock' : 'Out of Stock'}
-      </button>
-    </div>
+      <h4>{plant.name}</h4>
+      {/* Display price directly – no $ sign, no .toFixed(2) */}
+      <p>Price: {plant.price}</p>
+      {isSoldOut ? (
+        <button onClick={toggleStock}>Out of Stock</button>
+      ) : (
+        <button className="primary" onClick={toggleStock}>
+          In Stock
+        </button>
+      )}
+    </li>
   );
 }
 
 export default PlantCard;
-

@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 function NewPlantForm({ onAddPlant }) {
   const [formData, setFormData] = useState({
-    name: '',
-    image: '',
-    price: '',
+    name: "",
+    image: "",
+    price: "",
   });
 
   const handleChange = (e) => {
@@ -14,13 +14,14 @@ function NewPlantForm({ onAddPlant }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    // Send price as a string (no parseFloat)
     const newPlant = {
-      ...formData,
-      price: parseFloat(formData.price),
-      inStock: true,
+      name: formData.name,
+      image: formData.image,
+      price: formData.price,   // keep as string
     };
     onAddPlant(newPlant);
-    setFormData({ name: '', image: '', price: '' });
+    setFormData({ name: "", image: "", price: "" });
   };
 
   return (
