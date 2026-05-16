@@ -1,5 +1,5 @@
 import { render, screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import '@testing-library/jest-dom';
 import App from '../../App';
 
 describe('1st Deliverable', () => {
@@ -9,19 +9,14 @@ describe('1st Deliverable', () => {
   ];
 
   beforeEach(() => {
-    // Reset fetch mock before each test
-    if (global.resetFetchMock) global.resetFetchMock();
+    global.resetFetchMock();
   });
 
   test('displays all plants on startup', async () => {
-    // Set up the mock response
-    if (global.setFetchResponse) {
-      global.setFetchResponse(mockPlants);
-    }
-
+    global.setFetchResponse(mockPlants);
+    
     render(<App />);
-
-    // Wait for plants to load
+    
     await waitFor(() => {
       expect(screen.getByText('Aloe Vera')).toBeInTheDocument();
       expect(screen.getByText('Snake Plant')).toBeInTheDocument();
@@ -32,13 +27,11 @@ describe('1st Deliverable', () => {
     const differentPlants = [
       { id: 3, name: "Fern", price: 12.99, inStock: true, image: "fern.jpg" },
     ];
-
-    if (global.setFetchResponse) {
-      global.setFetchResponse(differentPlants);
-    }
-
+    
+    global.setFetchResponse(differentPlants);
+    
     render(<App />);
-
+    
     await waitFor(() => {
       expect(screen.getByText('Fern')).toBeInTheDocument();
       expect(screen.queryByText('Aloe Vera')).not.toBeInTheDocument();

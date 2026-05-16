@@ -1,22 +1,23 @@
-import { setupServer } from 'msw/node';
-import { http, HttpResponse } from 'msw';
+// Simple fetch mock without external dependencies
+import { vi } from 'vitest';
 
-// Create a mock fetch response function
+// Define setFetchResponse on global
 global.setFetchResponse = (responseData) => {
-  // Mock the global fetch function
   global.fetch = vi.fn().mockResolvedValue({
     ok: true,
     json: async () => responseData,
     status: 200,
+    headers: new Headers(),
   });
 };
 
-// For POST requests with specific responses
+// For POST requests
 global.setPostFetchResponse = (responseData) => {
   global.fetch = vi.fn().mockResolvedValue({
     ok: true,
     json: async () => responseData,
     status: 201,
+    headers: new Headers(),
   });
 };
 
@@ -25,7 +26,20 @@ global.setFetchError = (errorMessage) => {
   global.fetch = vi.fn().mockRejectedValue(new Error(errorMessage));
 };
 
-// Reset fetch mock between tests
+// For PATCH requests (mark as sold out)
+global.setPatchFetchResponse = (responseData) => {
+  global.fetch = vi.fn().mockResolvedValue({
+    ok: true,
+    json: async () => responseData,
+    status: 200,
+    headers: new Headers(),
+  });
+};
+
+// Reset fetch mock
 global.resetFetchMock = () => {
   global.fetch = vi.fn();
 };
+
+// Set up default fetch mock (empty array)
+global.setFetchResponse([]);
