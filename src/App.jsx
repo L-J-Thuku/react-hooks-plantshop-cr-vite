@@ -12,21 +12,33 @@ function App() {
   useEffect(() => {
     fetch('http://localhost:6001/plants')
       .then(response => response.json())
-      .then(data => setPlants(data))
+      .then(data => {
+        console.log('Fetched plants:', data);
+        setPlants(data);
+      })
       .catch(error => console.error('Error fetching plants:', error));
   }, []);
 
   // Add a new plant
   const addPlant = (newPlant) => {
+    const plantToSend = {
+      name: newPlant.name,
+      image: newPlant.image,
+      price: newPlant.price.toString(), // Ensure price is string
+      inStock: true
+    };
+    
     fetch('http://localhost:6001/plants', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(newPlant),
+      body: JSON.stringify(plantToSend),
     })
       .then(response => response.json())
-      .then(data => setPlants([...plants, data]))
+      .then(data => {
+        setPlants([...plants, data]);
+      })
       .catch(error => console.error('Error adding plant:', error));
   };
 
@@ -39,9 +51,9 @@ function App() {
   };
 
   // Filter plants based on search query
-  const filteredPlants = plants.filter(plant =>
-    plant.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredPlants = Array.isArray(plants) ? plants.filter(plant =>
+    plant.name && plant.name.toLowerCase().includes(searchQuery.toLowerCase())
+  ) : [];
 
   return (
     <div className="app">
@@ -50,11 +62,12 @@ function App() {
       <NewPlantForm addPlant={addPlant} />
       <div className="plant-grid">
         {filteredPlants.map(plant => (
-          <PlantCard 
-            key={plant.id} 
-            plant={plant} 
-            toggleSoldOut={toggleSoldOut}
-          />
+          <div key={plant.id} data-testid="plant-item">
+            <PlantCard 
+              plant={plant} 
+              toggleSoldOut={toggleSoldOut}
+            />
+          </div>
         ))}
       </div>
     </div>

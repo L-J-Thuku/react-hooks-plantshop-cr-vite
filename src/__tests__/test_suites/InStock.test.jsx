@@ -1,9 +1,31 @@
-import { render, screen } from '@testing-library/react';
-import App from '../../App';
+import React from "react";
+import { render, fireEvent, screen, waitFor } from "@testing-library/react";
+import App from "../../App";
+import "@testing-library/jest-dom";
 
-describe('InStock Component', () => {
-  test('renders in stock filter correctly', () => {
+describe("3rd Deliverable", () => {
+  const mockPlants = [
+    { id: 1, name: "Aloe Vera", price: 15.99, inStock: true, image: "aloe.jpg" },
+  ];
+
+  beforeEach(() => {
+    if (global.setFetchResponse) {
+      global.setFetchResponse(mockPlants);
+    }
+  });
+
+  test("marks a plant as sold out", async () => {
     render(<App />);
-    // Add your specific tests here
+    
+    await waitFor(() => {
+      expect(screen.getByText("Aloe Vera")).toBeInTheDocument();
+    });
+    
+    const soldOutButton = screen.getByText(/in stock/i);
+    fireEvent.click(soldOutButton);
+    
+    await waitFor(() => {
+      expect(screen.getByText(/sold out/i)).toBeInTheDocument();
+    });
   });
 });
