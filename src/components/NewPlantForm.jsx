@@ -4,7 +4,7 @@ function NewPlantForm({ addPlant }) {
   const [formData, setFormData] = useState({
     name: '',
     image: '',
-    price: 0,
+    price: '',
     inStock: true
   });
 
@@ -12,14 +12,19 @@ function NewPlantForm({ addPlant }) {
     const { name, value } = event.target;
     setFormData({
       ...formData,
-      [name]: name === 'price' ? parseFloat(value) : value
+      [name]: value
     });
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    addPlant(formData);
-    setFormData({ name: '', image: '', price: 0, inStock: true });
+    addPlant({
+      name: formData.name,
+      image: formData.image,
+      price: formData.price,
+      inStock: true
+    });
+    setFormData({ name: '', image: '', price: '', inStock: true });
   };
 
   return (
@@ -42,7 +47,7 @@ function NewPlantForm({ addPlant }) {
         required
       />
       <input
-        type="number"
+        type="text"
         name="price"
         placeholder="Price"
         value={formData.price}
