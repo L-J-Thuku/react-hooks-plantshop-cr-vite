@@ -9,13 +9,15 @@ describe("2nd Deliverable", () => {
   ];
 
   beforeEach(() => {
-    // Reset and set up fetch mock before each test
     if (global.resetFetchMock) {
       global.resetFetchMock();
     }
     if (global.setFetchResponse) {
       global.setFetchResponse(mockPlants);
     }
+  });
+
+  test("adds a new plant when the form is submitted", async () => {
     if (global.setPostFetchResponse) {
       global.setPostFetchResponse({ 
         id: 2, 
@@ -25,17 +27,13 @@ describe("2nd Deliverable", () => {
         inStock: true 
       });
     }
-  });
-
-  test("adds a new plant when the form is submitted", async () => {
+    
     render(<App />);
     
-    // Wait for the initial plants to load
     await waitFor(() => {
       expect(screen.getByText("Aloe Vera")).toBeInTheDocument();
-    }, { timeout: 2000 });
+    });
     
-    // Fill out the form
     const nameInput = screen.getByPlaceholderText(/plant name/i);
     const imageInput = screen.getByPlaceholderText(/image url/i);
     const priceInput = screen.getByPlaceholderText(/price/i);
@@ -46,7 +44,6 @@ describe("2nd Deliverable", () => {
     fireEvent.change(priceInput, { target: { value: "10" } });
     fireEvent.click(submitButton);
     
-    // Verify the POST request was made correctly
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledWith(
         "http://localhost:6001/plants",
