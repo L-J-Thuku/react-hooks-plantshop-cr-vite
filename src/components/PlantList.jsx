@@ -4,10 +4,10 @@ import PlantCard from "./PlantCard";
 function PlantList({ plants }) {
   return (
     <ul className="cards">
-      {plants.map((plant) => (
+       {plants.map(plant => (
         <PlantCard key={plant.id} plant={plant} />
       ))}
-    </ul>
+      </ul>
   );
 }
 
