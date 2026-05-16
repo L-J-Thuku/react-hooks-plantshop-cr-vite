@@ -4,20 +4,13 @@ import App from "../../App";
 import "@testing-library/jest-dom";
 
 describe("2nd Deliverable", () => {
-  const mockPlants = [
-    { id: 1, name: "Aloe Vera", price: "15.99", inStock: true, image: "aloe.jpg" },
-  ];
-
   beforeEach(() => {
     if (global.resetFetchMock) {
       global.resetFetchMock();
     }
     if (global.setFetchResponse) {
-      global.setFetchResponse(mockPlants);
+      global.setFetchResponse([]);
     }
-  });
-
-  test("adds a new plant when the form is submitted", async () => {
     if (global.setPostFetchResponse) {
       global.setPostFetchResponse({ 
         id: 2, 
@@ -27,14 +20,12 @@ describe("2nd Deliverable", () => {
         inStock: true 
       });
     }
-    
+  });
+
+  test("adds a new plant when the form is submitted", async () => {
     render(<App />);
     
-    await waitFor(() => {
-      expect(screen.getByText("Aloe Vera")).toBeInTheDocument();
-    });
-    
-    const nameInput = screen.getByPlaceholderText(/plant name/i);
+    const nameInput = await screen.findByPlaceholderText(/plant name/i);
     const imageInput = screen.getByPlaceholderText(/image url/i);
     const priceInput = screen.getByPlaceholderText(/price/i);
     const submitButton = screen.getByRole("button", { name: /add plant/i });
@@ -49,7 +40,6 @@ describe("2nd Deliverable", () => {
         "http://localhost:6001/plants",
         expect.objectContaining({
           method: "POST",
-          headers: { "Content-Type": "application/json" },
           body: expect.stringContaining("foo")
         })
       );

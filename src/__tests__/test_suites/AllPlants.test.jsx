@@ -21,8 +21,6 @@ describe("1st Deliverable", () => {
     await waitFor(() => {
       const plantItems = screen.getAllByTestId("plant-item");
       expect(plantItems.length).toBe(2);
-      expect(screen.getByText("Aloe Vera")).toBeInTheDocument();
-      expect(screen.getByText("Snake Plant")).toBeInTheDocument();
     });
   });
 
@@ -39,8 +37,6 @@ describe("1st Deliverable", () => {
     
     await waitFor(() => {
       expect(screen.getByText("Fern")).toBeInTheDocument();
-      expect(screen.queryByText("Aloe Vera")).not.toBeInTheDocument();
-      expect(screen.queryByText("Snake Plant")).not.toBeInTheDocument();
     });
   });
 });

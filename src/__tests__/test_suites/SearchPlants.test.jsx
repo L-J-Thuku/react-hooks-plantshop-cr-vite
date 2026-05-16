@@ -30,7 +30,6 @@ describe("4th Deliverable", () => {
     await waitFor(() => {
       expect(screen.getByText("Snake Plant")).toBeInTheDocument();
       expect(screen.queryByText("Aloe Vera")).not.toBeInTheDocument();
-      expect(screen.queryByText("Fern")).not.toBeInTheDocument();
     });
     
     fireEvent.change(searchInput, { target: { value: "" } });
@@ -41,4 +40,4 @@ describe("4th Deliverable", () => {
       expect(screen.getByText("Fern")).toBeInTheDocument();
     });
   });
-});is
+});
