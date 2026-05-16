@@ -1,7 +1,6 @@
 import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
-import App from "../../components/App";
-import "@testing-library/jest-dom";
+import App from "../../App";
 
 describe("1st Deliverable", () => {
   const mockPlants = [

@@ -20,5 +20,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest --globals"
+  },
+  "vitest": {
+    "globals": true
   }
 }
