@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
+import Header from './components/Header';
 import PlantCard from './components/PlantCard';
 import Search from './components/Search';
 import NewPlantForm from './components/NewPlantForm';
@@ -24,7 +25,7 @@ function App() {
     const plantToSend = {
       name: newPlant.name,
       image: newPlant.image,
-      price: newPlant.price.toString(), // Ensure price is string
+      price: newPlant.price.toString(),
       inStock: true
     };
     
@@ -57,7 +58,7 @@ function App() {
 
   return (
     <div className="app">
-      <h1>Plantshop</h1>
+      <Header />
       <Search searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
       <NewPlantForm addPlant={addPlant} />
       <div className="plant-grid">
