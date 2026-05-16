@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
-import PlantCard from "./PlantCard";
-import Search from "./Search";
-import NewPlantForm from "./NewPlantForm";
+import PlantCard from "./components/PlantCard";
+import Search from "./components/Search";
+import NewPlantForm from "./components/NewPlantForm";
 
 function App() {
-  const [plants, setPlants] = useState([]); // Initialize as empty array
+  const [plants, setPlants] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     fetch('http://localhost:6001/plants')
       .then(response => response.json())
       .then(data => {
-        // Ensure data is an array
         const plantsArray = Array.isArray(data) ? data : [];
         setPlants(plantsArray);
       })
@@ -45,8 +44,7 @@ function App() {
     );
   };
 
-  // Safely filter plants - ensure plants is an array
-  const filteredPlants = Array.isArray(plants) 
+  const filteredPlants = Array.isArray(plants)
     ? plants.filter(plant =>
         plant.name && plant.name.toLowerCase().includes(searchQuery.toLowerCase())
       )
