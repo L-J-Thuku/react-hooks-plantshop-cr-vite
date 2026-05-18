@@ -1,31 +1,27 @@
-import React from "react";
-import { render, fireEvent, screen, waitFor } from "@testing-library/react";
-import App from "../../components/App";
-import "@testing-library/jest-dom";
+import React from 'react';
+import { render, fireEvent, within } from '@testing-library/react';
+import App from '../../components/App';
+import '@testing-library/jest-dom';
 
-describe("3rd Deliverable", () => {
-  const mockPlants = [
-    { id: 1, name: "Aloe Vera", price: 15.99, inStock: true, image: "aloe.jpg" },
-  ];
+describe('3rd Deliverable', () => {
+  test('marks a plant as sold out', async () => {
+    global.setFetchResponse(global.basePlants)
 
-  beforeEach(() => {
-    if (global.setFetchResponse) {
-      global.setFetchResponse(mockPlants);
-    }
+    const { findAllByTestId, findByText } = render(<App />);
+
+    // Get all plant items
+    const plantItems = await findAllByTestId('plant-item');
+    expect(plantItems).toHaveLength(basePlants.length);
+
+    // Select the first plant item
+    const firstPlantItem = plantItems[0];
+
+    // Find and click the "In Stock" button within the first plant item
+    const inStockButton = within(firstPlantItem).getByText('In Stock');
+    fireEvent.click(inStockButton);
+
+    // Wait for the "Out of Stock" button to appear and verify its presence
+    const outOfStockButton = await findByText('Out of Stock');
+    expect(outOfStockButton).toBeInTheDocument();
   });
-
-  test("marks a plant as sold out", async () => {
-    render(<App />);
-    
-    await waitFor(() => {
-      expect(screen.getByText("Aloe Vera")).toBeInTheDocument();
-    });
-    
-    const soldOutButton = screen.getByText(/in stock/i);
-    fireEvent.click(soldOutButton);
-    
-    await waitFor(() => {
-      expect(screen.getByText(/sold out/i)).toBeInTheDocument();
-    });
-  });
-});
+})

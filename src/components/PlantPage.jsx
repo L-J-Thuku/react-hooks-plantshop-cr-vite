@@ -1,60 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import PlantCard from './PlantCard';
-import Search from './Search';
-import NewPlantForm from './NewPlantForm';
+import React from "react";
+import NewPlantForm from "./NewPlantForm";
+import PlantList from "./PlantList";
+import Search from "./Search";
+import { useState } from "react";
 
-function PlantPage() {
-  const [plants, setPlants] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
-
-  useEffect(() => {
-    fetch('http://localhost:6001/plants')
-      .then(response => response.json())
-      .then(data => setPlants(data))
-      .catch(error => console.error('Error fetching plants:', error));
-  }, []);
-
-  const addPlant = (newPlant) => {
-    fetch('http://localhost:6001/plants', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        ...newPlant,
-        price: newPlant.price.toString()
-      }),
-    })
-      .then(response => response.json())
-      .then(data => setPlants([...plants, data]))
-      .catch(error => console.error('Error adding plant:', error));
-  };
-
-  const toggleSoldOut = (id) => {
-    const updatedPlants = plants.map(plant => 
-      plant.id === id ? { ...plant, inStock: !plant.inStock } : plant
-    );
-    setPlants(updatedPlants);
-  };
+function PlantPage({ plants, onAddPlant }) {
+   const [searchTerm, setSearchTerm] = useState("");
 
   const filteredPlants = plants.filter(plant =>
-    plant.name.toLowerCase().includes(searchQuery.toLowerCase())
+    plant.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
   return (
     <main>
-      <Search searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-      <NewPlantForm addPlant={addPlant} />
-      <div className="plant-grid">
-        {filteredPlants.map(plant => (
-          <div key={plant.id} data-testid="plant-item">
-            <PlantCard 
-              plant={plant} 
-              toggleSoldOut={toggleSoldOut}
-            />
-          </div>
-        ))}
-      </div>
+      <NewPlantForm onAddPlant={onAddPlant}/>
+      <Search searchTerm={searchTerm} onSearchChange={setSearchTerm}/>
+      <PlantList plants={filteredPlants}/>
     </main>
   );
 }

@@ -1,43 +1,25 @@
-import React from "react";
-import { render, fireEvent, screen, waitFor } from "@testing-library/react";
-import App from "../../components/App";
-import "@testing-library/jest-dom";
+import React from 'react';
+import { render, fireEvent, waitFor } from '@testing-library/react';
+import App from '../../components/App';
+import '@testing-library/jest-dom';
 
-describe("4th Deliverable", () => {
-  const mockPlants = [
-    { id: 1, name: "Aloe Vera", price: 15.99, inStock: true, image: "aloe.jpg" },
-    { id: 2, name: "Snake Plant", price: 25.99, inStock: true, image: "snake.jpg" },
-    { id: 3, name: "Fern", price: 12.99, inStock: true, image: "fern.jpg" },
-  ];
+describe('4th Deliverable', () => {
+  test('filters plants by name on search', async () => {
+    global.setFetchResponse(global.basePlants)
+    const { getByPlaceholderText, queryAllByTestId } = render(<App />);
+    const searchInput = getByPlaceholderText('Type a name to search...');
+    fireEvent.change(searchInput, { target: { value: 'aloe' } });
 
-  beforeEach(() => {
-    if (global.setFetchResponse) {
-      global.setFetchResponse(mockPlants);
-    }
-  });
-
-  test("filters plants by name on search", async () => {
-    render(<App />);
-    
     await waitFor(() => {
-      const plantItems = screen.getAllByTestId("plant-item");
-      expect(plantItems.length).toBe(3);
+      const filteredPlants = queryAllByTestId('plant-item');
+      expect(filteredPlants).toHaveLength(1);
     });
     
-    const searchInput = screen.getByPlaceholderText(/search/i);
-    fireEvent.change(searchInput, { target: { value: "Snake" } });
+    fireEvent.change(searchInput, { target: { value: 'p' } });
     
     await waitFor(() => {
-      expect(screen.getByText("Snake Plant")).toBeInTheDocument();
-      expect(screen.queryByText("Aloe Vera")).not.toBeInTheDocument();
-    });
-    
-    fireEvent.change(searchInput, { target: { value: "" } });
-    
-    await waitFor(() => {
-      expect(screen.getByText("Aloe Vera")).toBeInTheDocument();
-      expect(screen.getByText("Snake Plant")).toBeInTheDocument();
-      expect(screen.getByText("Fern")).toBeInTheDocument();
+      const filteredPlants = queryAllByTestId('plant-item');
+      expect(filteredPlants).toHaveLength(3);
     });
   });
-});
+})

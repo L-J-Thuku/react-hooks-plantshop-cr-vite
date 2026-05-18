@@ -1,69 +1,24 @@
-import React, { useState, useEffect } from "react";
-import "./App.css";
-import PlantCard from "./PlantCard";
-import Search from "./Search";
-import NewPlantForm from "./NewPlantForm";
+import React from "react";
+import Header from "./Header";
+import PlantPage from "./PlantPage";
+import { useState,useEffect } from "react";
 
 function App() {
-  const [plants, setPlants] = useState([]); // Initialize as empty array
-  const [searchQuery, setSearchQuery] = useState('');
+    const [plants, setPlants] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:6001/plants')
-      .then(response => response.json())
-      .then(data => {
-        // Ensure data is an array
-        const plantsArray = Array.isArray(data) ? data : [];
-        setPlants(plantsArray);
-      })
-      .catch(error => console.error('Error fetching plants:', error));
+    fetch("http://localhost:6001/plants")
+      .then(r => r.json())
+      .then(setPlants);
   }, []);
 
-  const addPlant = (newPlant) => {
-    fetch('http://localhost:6001/plants', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name: newPlant.name,
-        image: newPlant.image,
-        price: newPlant.price.toString(),
-        inStock: true
-      }),
-    })
-      .then(response => response.json())
-      .then(data => {
-        setPlants(prevPlants => [...prevPlants, data]);
-      })
-      .catch(error => console.error('Error adding plant:', error));
-  };
-
-  const toggleSoldOut = (id) => {
-    setPlants(prevPlants =>
-      prevPlants.map(plant =>
-        plant.id === id ? { ...plant, inStock: !plant.inStock } : plant
-      )
-    );
-  };
-
-  // Safely filter plants - ensure plants is an array
-  const filteredPlants = Array.isArray(plants) 
-    ? plants.filter(plant =>
-        plant.name && plant.name.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    : [];
-
+  function handleAddPlant(newPlant) {
+    setPlants(prev => [...prev, newPlant]);
+  }
   return (
     <div className="app">
-      <h1>Plantshop</h1>
-      <Search searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-      <NewPlantForm addPlant={addPlant} />
-      <div className="plant-grid">
-        {filteredPlants.map(plant => (
-          <div key={plant.id} data-testid="plant-item">
-            <PlantCard plant={plant} toggleSoldOut={toggleSoldOut} />
-          </div>
-        ))}
-      </div>
+      <Header />
+      <PlantPage plants={plants} onAddPlant={handleAddPlant}/>
     </div>
   );
 }

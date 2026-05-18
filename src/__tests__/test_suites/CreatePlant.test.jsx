@@ -1,48 +1,51 @@
-import React from "react";
-import { render, fireEvent, screen, waitFor } from "@testing-library/react";
-import App from "../../components/App";
-import "@testing-library/jest-dom";
+import React from 'react';
+import { render, fireEvent } from '@testing-library/react';
+import App from '../../components/App';
+import '@testing-library/jest-dom';
 
-describe("2nd Deliverable", () => {
-  beforeEach(() => {
-    if (global.resetFetchMock) {
-      global.resetFetchMock();
-    }
-    if (global.setFetchResponse) {
-      global.setFetchResponse([]);
-    }
-    if (global.setPostFetchResponse) {
-      global.setPostFetchResponse({ 
-        id: 2, 
-        name: "foo", 
-        image: "foo_plant_image_url", 
-        price: "10", 
-        inStock: true 
-      });
-    }
-  });
+describe('2nd Deliverable', () => {
+    test('adds a new plant when the form is submitted', async () => {
+        global.setFetchResponse(global.basePlants)
+        const { getByPlaceholderText, findByText, getByText } = render(<App />)
 
-  test("adds a new plant when the form is submitted", async () => {
-    render(<App />);
+        const firstPlant = {name: 'foo', image: 'foo_plant_image_url', price: '10'}
     
-    const nameInput = await screen.findByPlaceholderText(/plant name/i);
-    const imageInput = screen.getByPlaceholderText(/image url/i);
-    const priceInput = screen.getByPlaceholderText(/price/i);
-    const submitButton = screen.getByRole("button", { name: /add plant/i });
+        global.setFetchResponse({...firstPlant, id: "184298qfhquhf92"})
     
-    fireEvent.change(nameInput, { target: { value: "foo" } });
-    fireEvent.change(imageInput, { target: { value: "foo_plant_image_url" } });
-    fireEvent.change(priceInput, { target: { value: "10" } });
-    fireEvent.click(submitButton);
-    
-    await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledWith(
-        "http://localhost:6001/plants",
-        expect.objectContaining({
-          method: "POST",
-          body: expect.stringContaining("foo")
+        fireEvent.change(getByPlaceholderText('Plant name'), { target: { value: firstPlant.name } });
+        fireEvent.change(getByPlaceholderText('Image URL'), { target: { value: firstPlant.image } });
+        fireEvent.change(getByPlaceholderText('Price'), { target: { value: firstPlant.price } });
+        fireEvent.click(getByText('Add Plant'))
+
+        expect(fetch).toHaveBeenCalledWith("http://localhost:6001/plants", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(firstPlant),
         })
-      );
+    
+        const newPlant = await findByText('foo');
+        expect(newPlant).toBeInTheDocument();
+
+        const secondPlant = {name: 'bar', image: 'bar_plant_image_url', price: '5'}
+    
+        global.setFetchResponse({...secondPlant, id: "3810fqhrquhf9fnqnc0"})
+    
+        fireEvent.change(getByPlaceholderText('Plant name'), { target: { value: secondPlant.name } });
+        fireEvent.change(getByPlaceholderText('Image URL'), { target: { value: secondPlant.image } });
+        fireEvent.change(getByPlaceholderText('Price'), { target: { value: secondPlant.price } });
+        fireEvent.click(getByText('Add Plant'))
+    
+        expect(fetch).toHaveBeenCalledWith("http://localhost:6001/plants", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(secondPlant),
+        })
+
+        const nextPlant = await findByText('bar');
+        expect(nextPlant).toBeInTheDocument();
     });
-  });
-});
+})

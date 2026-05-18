@@ -1,17 +1,17 @@
-import React from 'react';
+import React from "react";
+   
 
-function Search({ searchQuery, setSearchQuery }) {
-  const handleSearchChange = (event) => {
-    setSearchQuery(event.target.value);
-  };
-
+function Search({ searchTerm, onSearchChange }) {
   return (
-    <div className="search-bar">
+    <div className="searchbar">
+      <label htmlFor="search">Search Plants:</label>
       <input
         type="text"
-        placeholder="Search plants..."
-        value={searchQuery}
-        onChange={handleSearchChange}
+        
+        id="search"
+        placeholder="Type a name to search..."
+        value={searchTerm}
+        onChange={e => onSearchChange(e.target.value)}
       />
     </div>
   );
