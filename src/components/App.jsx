@@ -6,11 +6,12 @@ import { useState,useEffect } from "react";
 function App() {
     const [plants, setPlants] = useState([]);
 
-  useEffect(() => {
-    fetch("http://localhost:6001/plants")
-      .then(r => r.json())
-      .then(setPlants);
-  }, []);
+  // In your App component
+useEffect(() => {
+  fetch('/plants')
+    .then(res => res.json())
+    .then(data => setPlants(data));
+}, []);
 
   function handleAddPlant(newPlant) {
     setPlants(prev => [...prev, newPlant]);
