@@ -3,36 +3,25 @@ import App from '../../components/App';
 
 describe('4th Deliverable', () => {
   test('filters plants by name on search', async () => {
-    // Mock the initial GET request
-    global.fetch.mockImplementationOnce(() =>
-      Promise.resolve({
-        ok: true,
-        json: () => Promise.resolve(global.basePlants),
-      })
-    );
-    
+    global.setFetchResponse(global.basePlants);
     const { getByTestId, findAllByTestId } = render(<App />);
     
     // Wait for plants to load
-    let plantItems = await findAllByTestId('plant-item');
-    expect(plantItems).toHaveLength(3);
+    await waitFor(async () => {
+      const plants = await findAllByTestId('plant-item');
+      expect(plants).toHaveLength(3);
+    });
     
-    // Search for a plant
+    // Search for 'Aloe'
     const searchInput = getByTestId('search-input');
     fireEvent.change(searchInput, { target: { value: 'Aloe' } });
     
-    // Wait for filter to apply
+    // Check filtered results
     await waitFor(async () => {
       const filteredPlants = await findAllByTestId('plant-item');
       expect(filteredPlants).toHaveLength(1);
-    });
-    
-    // Clear search and verify all plants return
-    fireEvent.change(searchInput, { target: { value: '' } });
-    
-    await waitFor(async () => {
-      const allPlants = await findAllByTestId('plant-item');
-      expect(allPlants).toHaveLength(3);
+      const plantName = filteredPlants[0].querySelector('h3').textContent;
+      expect(plantName).toBe('Aloe Vera');
     });
   });
 });

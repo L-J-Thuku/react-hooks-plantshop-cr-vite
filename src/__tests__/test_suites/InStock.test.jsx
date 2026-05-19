@@ -3,28 +3,17 @@ import App from '../../components/App';
 
 describe('3rd Deliverable', () => {
   test('marks a plant as sold out', async () => {
-    // Mock the initial GET request
-    global.fetch.mockImplementationOnce(() =>
-      Promise.resolve({
-        ok: true,
-        json: () => Promise.resolve(global.basePlants),
-      })
-    );
-    
-    // Mock the PATCH request
-    global.fetch.mockImplementationOnce(() =>
-      Promise.resolve({
-        ok: true,
-        json: () => Promise.resolve({ id: 1, inStock: false }),
-      })
-    );
+    global.setFetchResponse(global.basePlants);
     
     const { findAllByTestId, getByTestId } = render(<App />);
     
     // Wait for plants to load
-    await findAllByTestId('plant-item');
+    await waitFor(async () => {
+      const plants = await findAllByTestId('plant-item');
+      expect(plants).toHaveLength(3);
+    });
     
-    // Find the first plant's stock button (Monstera)
+    // Find Monstera's stock button (id=1)
     const stockButton = getByTestId('stock-button-1');
     expect(stockButton.textContent).toBe('In Stock');
     

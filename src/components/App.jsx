@@ -5,72 +5,56 @@ function App() {
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
-    fetchPlants();
+    fetch('http://localhost:6001/plants')
+      .then(response => response.json())
+      .then(data => {
+        setPlants(data);
+      })
+      .catch(error => console.error('Error:', error));
   }, []);
 
-  const fetchPlants = async () => {
-    try {
-      const response = await fetch('http://localhost:6001/plants');
-      const data = await response.json();
-      // Ensure data is an array
-      if (Array.isArray(data)) {
-        setPlants(data);
-      } else {
-        setPlants([]);
-      }
-    } catch (error) {
-      console.error('Error fetching plants:', error);
-      setPlants([]);
-    }
-  };
-
-  const handleAddPlant = async (event) => {
+  const handleAddPlant = (event) => {
     event.preventDefault();
     const formData = new FormData(event.target);
     
     const newPlant = {
       name: formData.get('name'),
-      image: formData.get('image') || '',
-      price: parseFloat(formData.get('price')),
+      image: formData.get('image'),
+      price: formData.get('price'), // Send as string, not number
     };
 
-    try {
-      const response = await fetch('http://localhost:6001/plants', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newPlant),
-      });
-      const savedPlant = await response.json();
-      setPlants(prevPlants => [...prevPlants, savedPlant]);
-      event.target.reset();
-    } catch (error) {
-      console.error('Error adding plant:', error);
-    }
+    fetch('http://localhost:6001/plants', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newPlant),
+    })
+      .then(response => response.json())
+      .then(savedPlant => {
+        setPlants([...plants, savedPlant]);
+        event.target.reset();
+      })
+      .catch(error => console.error('Error:', error));
   };
 
-  const handleToggleStock = async (id, currentStatus) => {
-    try {
-      const response = await fetch(`http://localhost:6001/plants/${id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ inStock: !currentStatus }),
-      });
-      const updatedPlant = await response.json();
-      setPlants(prevPlants => 
-        prevPlants.map(plant => 
+  const handleToggleStock = (id, currentStatus) => {
+    fetch(`http://localhost:6001/plants/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ inStock: !currentStatus }),
+    })
+      .then(response => response.json())
+      .then(updatedPlant => {
+        setPlants(plants.map(plant => 
           plant.id === id ? { ...plant, inStock: !currentStatus } : plant
-        )
-      );
-    } catch (error) {
-      console.error('Error updating plant:', error);
-    }
+        ));
+      })
+      .catch(error => console.error('Error:', error));
   };
 
-  // Safely filter plants
-  const filteredPlants = Array.isArray(plants) ? plants.filter(plant => {
+  const filteredPlants = plants.filter(plant => {
     if (!plant || !plant.name) return false;
     return plant.name.toLowerCase().includes(searchTerm.toLowerCase());
-  }) : [];
+  });
 
   return (
     <div>
@@ -95,7 +79,7 @@ function App() {
         <div key={plant.id} data-testid="plant-item">
           <h3>{plant.name}</h3>
           <p>{plant.species || ''}</p>
-          <p>${typeof plant.price === 'number' ? plant.price.toFixed(2) : plant.price}</p>
+          <p>${plant.price}</p>
           <button
             onClick={() => handleToggleStock(plant.id, plant.inStock)}
             data-testid={`stock-button-${plant.id}`}

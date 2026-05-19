@@ -3,6 +3,9 @@ import App from '../../components/App';
 
 describe('2nd Deliverable', () => {
   test('adds a new plant when the form is submitted', async () => {
+    // Clear any previous mocks
+    vi.clearAllMocks();
+    
     // Mock the initial GET request
     global.fetch.mockImplementationOnce(() =>
       Promise.resolve({
@@ -11,7 +14,7 @@ describe('2nd Deliverable', () => {
       })
     );
     
-    // Mock the POST request
+    // Mock the POST request - price should be a string
     global.fetch.mockImplementationOnce(() =>
       Promise.resolve({
         ok: true,
@@ -22,8 +25,10 @@ describe('2nd Deliverable', () => {
     const { getByPlaceholderText, getByText, findAllByTestId } = render(<App />);
     
     // Wait for initial plants to load
-    let plants = await findAllByTestId('plant-item');
-    expect(plants).toHaveLength(3);
+    await waitFor(async () => {
+      const plants = await findAllByTestId('plant-item');
+      expect(plants).toHaveLength(3);
+    });
     
     // Fill out the form
     const nameInput = getByPlaceholderText('Plant name');
@@ -34,9 +39,16 @@ describe('2nd Deliverable', () => {
     fireEvent.change(priceInput, { target: { value: '12.99' } });
     fireEvent.click(submitButton);
     
+    // Check that fetch was called with the right arguments
+    expect(global.fetch).toHaveBeenCalledWith('http://localhost:6001/plants', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: 'Pothos', image: '', price: '12.99' }),
+    });
+    
     // Wait for the new plant to appear
     await waitFor(async () => {
-      plants = await findAllByTestId('plant-item');
+      const plants = await findAllByTestId('plant-item');
       expect(plants).toHaveLength(4);
     });
   });

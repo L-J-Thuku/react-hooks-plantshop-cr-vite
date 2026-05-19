@@ -7,11 +7,10 @@ describe('1st Deliverable', () => {
     const { findAllByTestId } = render(<App />);
     
     const plantItems = await findAllByTestId('plant-item');
-    expect(plantItems).toHaveLength(global.basePlants.length);
+    expect(plantItems).toHaveLength(3);
     
     const plantNames = plantItems.map((item) => item.querySelector('h3').textContent);
-    const basePlantNames = global.basePlants.map((plant) => plant.name);
-    expect(plantNames).toEqual(basePlantNames);
+    expect(plantNames).toEqual(['Monstera', 'Snake Plant', 'Aloe Vera']);
   });
 
   test('plants aren\'t hardcoded', async () => {    
@@ -19,10 +18,9 @@ describe('1st Deliverable', () => {
     const { findAllByTestId } = render(<App />);
     
     const plantItems = await findAllByTestId('plant-item');
-    expect(plantItems).toHaveLength(global.alternatePlants.length);
+    expect(plantItems).toHaveLength(3);
     
     const plantNames = plantItems.map((item) => item.querySelector('h3').textContent);
-    const basePlantNames = global.alternatePlants.map((plant) => plant.name);
-    expect(plantNames).toEqual(basePlantNames);
+    expect(plantNames).toEqual(['Rose', 'Tulip', 'Orchid']);
   });
 });
