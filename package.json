@@ -1,44 +1,25 @@
 {
   "name": "react-hooks-mock-code-challenge-plantshop",
-  "type": "module",
   "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@vitejs/plugin-react": "^4.3.4",
-    "json-server": "^1.0.0-beta.3",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
-  },
+  "type": "module",
   "scripts": {
     "dev": "vite",
-    "server": "json-server db.json -p 6001",
-    "test": "vitest"
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "NODE_OPTIONS=\"--max-old-space-size=4096\" vitest run",
+    "test:watch": "vitest",
+    "test:ui": "vitest --ui"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.9.1",
-    "@testing-library/react": "^16.3.2",
-    "@testing-library/user-event": "^14.6.1",
-    "jsdom": "^26.0.0",
-    "node-fetch": "^3.3.2",
-    "vite": "^6.1.0",
-    "vitest": "^3.0.5"
+    "@testing-library/react": "^14.3.1",
+    "@vitejs/plugin-react": "^4.7.0",
+    "jsdom": "^22.1.0",
+    "vite": "^4.5.14",
+    "vitest": "^0.34.6"
   }
 }

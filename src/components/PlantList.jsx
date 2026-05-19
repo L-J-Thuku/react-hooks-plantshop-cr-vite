@@ -1,22 +1,23 @@
-import React from "react";
-import NewPlantForm from "./NewPlantForm";
-import PlantList from "./PlantList";
-import Search from "./Search";
-import { useState } from "react";
+import React from 'react';
+import PlantCard from './PlantCard';
 
-function PlantPage({ plants, onAddPlant }) {
-   const [searchTerm, setSearchTerm] = useState("");
+function PlantList({ plants, onUpdatePlant, onDeletePlant }) {
+  if (!plants || plants.length === 0) {
+    return <div className="no-plants">🌿 No plants found</div>;
+  }
 
-  const filteredPlants = plants.filter(plant =>
-    plant.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
   return (
-    <main>
-      <NewPlantForm onAddPlant={onAddPlant}/>
-      <Search searchTerm={searchTerm} onSearchChange={setSearchTerm}/>
-      <PlantList plants={filteredPlants}/>
-    </main>
+    <div className="plant-list">
+      {plants.map(plant => (
+        <PlantCard 
+          key={plant.id}
+          plant={plant}
+          onUpdatePlant={onUpdatePlant}
+          onDeletePlant={onDeletePlant}
+        />
+      ))}
+    </div>
   );
 }
 
-export default PlantPage;
+export default PlantList;
