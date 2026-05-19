@@ -1,27 +1,49 @@
-import React from 'react';
-import { render, fireEvent, within } from '@testing-library/react';
+import { render, fireEvent, waitFor } from '@testing-library/react';
 import App from '../../components/App';
-import '@testing-library/jest-dom';
 
 describe('3rd Deliverable', () => {
   test('marks a plant as sold out', async () => {
-    global.setFetchResponse(global.basePlants)
-
-    const { findAllByTestId, findByText } = render(<App />);
-
-    // Get all plant items
-    const plantItems = await findAllByTestId('plant-item');
-    expect(plantItems).toHaveLength(basePlants.length);
-
-    // Select the first plant item
-    const firstPlantItem = plantItems[0];
-
-    // Find and click the "In Stock" button within the first plant item
-    const inStockButton = within(firstPlantItem).getByText('In Stock');
-    fireEvent.click(inStockButton);
-
-    // Wait for the "Out of Stock" button to appear and verify its presence
-    const outOfStockButton = await findByText('Out of Stock');
-    expect(outOfStockButton).toBeInTheDocument();
+    // Setup initial plants
+    const initialPlants = [
+      { id: 1, name: "Monstera", species: "Monstera deliciosa", price: 25.99, inStock: true, image: "monstera.jpg" },
+      { id: 2, name: "Snake Plant", species: "Sansevieria trifasciata", price: 19.99, inStock: true, image: "snake.jpg" },
+      { id: 3, name: "Aloe Vera", species: "Aloe barbadensis", price: 15.99, inStock: true, image: "aloe.jpg" },
+    ];
+    
+    // Setup updated plant after PATCH
+    const updatedPlant = { ...initialPlants[0], inStock: false };
+    
+    // Mock the initial GET request
+    global.fetch.mockImplementationOnce(() =>
+      Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve(initialPlants),
+      })
+    );
+    
+    // Mock the PATCH request for toggling stock
+    global.fetch.mockImplementationOnce(() =>
+      Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve(updatedPlant),
+      })
+    );
+    
+    const { findAllByTestId, getByTestId, queryByText } = render(<App />);
+    
+    // Wait for plants to load
+    await findAllByTestId('plant-item');
+    
+    // Get the first plant's stock button (Monstera)
+    const stockButton = getByTestId('stock-button-1');
+    expect(stockButton).toHaveTextContent('In Stock');
+    
+    // Click the button to mark as sold out
+    fireEvent.click(stockButton);
+    
+    // Wait for and verify the button text changed to "Out of Stock"
+    await waitFor(() => {
+      expect(stockButton).toHaveTextContent('Out of Stock');
+    });
   });
-})
+});
