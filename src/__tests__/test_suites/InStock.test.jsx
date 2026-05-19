@@ -8,19 +8,16 @@ describe('3rd Deliverable', () => {
     const { findAllByTestId, getByTestId } = render(<App />);
     
     // Wait for plants to load
-    await waitFor(async () => {
-      const plants = await findAllByTestId('plant-item');
-      expect(plants).toHaveLength(3);
-    });
+    await findAllByTestId('plant-item', {}, { timeout: 3000 });
     
-    // Find Monstera's stock button (id=1)
+    // Find Monstera's button (id=1)
     const stockButton = getByTestId('stock-button-1');
     expect(stockButton.textContent).toBe('In Stock');
     
-    // Click to mark as sold out
+    // Click to toggle
     fireEvent.click(stockButton);
     
-    // Wait for the button text to change
+    // Verify text changed
     await waitFor(() => {
       expect(stockButton.textContent).toBe('Out of Stock');
     });

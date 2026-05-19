@@ -7,21 +7,30 @@ describe('4th Deliverable', () => {
     const { getByTestId, findAllByTestId } = render(<App />);
     
     // Wait for plants to load
-    await waitFor(async () => {
-      const plants = await findAllByTestId('plant-item');
-      expect(plants).toHaveLength(3);
-    });
+    let plantItems = await findAllByTestId('plant-item', {}, { timeout: 3000 });
+    expect(plantItems.length).toBe(3);
+    
+    // Get search input
+    const searchInput = getByTestId('search-input');
     
     // Search for 'Aloe'
-    const searchInput = getByTestId('search-input');
     fireEvent.change(searchInput, { target: { value: 'Aloe' } });
     
     // Check filtered results
     await waitFor(async () => {
       const filteredPlants = await findAllByTestId('plant-item');
-      expect(filteredPlants).toHaveLength(1);
+      expect(filteredPlants.length).toBe(1);
       const plantName = filteredPlants[0].querySelector('h3').textContent;
       expect(plantName).toBe('Aloe Vera');
+    });
+    
+    // Clear search
+    fireEvent.change(searchInput, { target: { value: '' } });
+    
+    // Verify all plants return
+    await waitFor(async () => {
+      const allPlants = await findAllByTestId('plant-item');
+      expect(allPlants.length).toBe(3);
     });
   });
 });

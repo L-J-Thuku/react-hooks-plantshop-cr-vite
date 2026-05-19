@@ -1,10 +1,8 @@
 import '@testing-library/jest-dom';
 import { vi } from 'vitest';
 
-// Mock fetch
 global.fetch = vi.fn();
 
-// Helper to set fetch response
 global.setFetchResponse = (responseData) => {
   global.fetch.mockImplementation(() =>
     Promise.resolve({
@@ -14,7 +12,6 @@ global.setFetchResponse = (responseData) => {
   );
 };
 
-// Test data
 global.basePlants = [
   { id: 1, name: "Monstera", species: "Monstera deliciosa", price: 25.99, inStock: true, image: "monstera.jpg" },
   { id: 2, name: "Snake Plant", species: "Sansevieria trifasciata", price: 19.99, inStock: true, image: "snake.jpg" },
@@ -27,12 +24,10 @@ global.alternatePlants = [
   { id: 103, name: "Orchid", species: "Orchidaceae", price: 35.99, inStock: true, image: "orchid.jpg" },
 ];
 
-// Clean up after each test
 afterEach(() => {
   vi.clearAllMocks();
 });
 
-// Suppress console errors
 const originalError = console.error;
 beforeAll(() => {
   console.error = vi.fn();

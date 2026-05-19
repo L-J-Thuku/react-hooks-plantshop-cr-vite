@@ -6,55 +6,49 @@ function App() {
 
   useEffect(() => {
     fetch('http://localhost:6001/plants')
-      .then(response => response.json())
-      .then(data => {
-        setPlants(data);
-      })
-      .catch(error => console.error('Error:', error));
+      .then(res => res.json())
+      .then(data => setPlants(data))
+      .catch(err => console.error(err));
   }, []);
 
-  const handleAddPlant = (event) => {
-    event.preventDefault();
-    const formData = new FormData(event.target);
+  const handleAddPlant = (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
     
-    const newPlant = {
-      name: formData.get('name'),
-      image: formData.get('image'),
-      price: formData.get('price'), // Send as string, not number
-    };
-
     fetch('http://localhost:6001/plants', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newPlant),
+      body: JSON.stringify({
+        name: formData.get('name'),
+        image: formData.get('image'),
+        price: formData.get('price'),
+      }),
     })
-      .then(response => response.json())
-      .then(savedPlant => {
-        setPlants([...plants, savedPlant]);
-        event.target.reset();
+      .then(res => res.json())
+      .then(newPlant => {
+        setPlants([...plants, newPlant]);
+        e.target.reset();
       })
-      .catch(error => console.error('Error:', error));
+      .catch(err => console.error(err));
   };
 
-  const handleToggleStock = (id, currentStatus) => {
+  const handleToggleStock = (id) => {
+    const plant = plants.find(p => p.id === id);
     fetch(`http://localhost:6001/plants/${id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ inStock: !currentStatus }),
+      body: JSON.stringify({ inStock: !plant.inStock }),
     })
-      .then(response => response.json())
-      .then(updatedPlant => {
-        setPlants(plants.map(plant => 
-          plant.id === id ? { ...plant, inStock: !currentStatus } : plant
-        ));
+      .then(res => res.json())
+      .then(updated => {
+        setPlants(plants.map(p => p.id === id ? { ...p, inStock: !p.inStock } : p));
       })
-      .catch(error => console.error('Error:', error));
+      .catch(err => console.error(err));
   };
 
-  const filteredPlants = plants.filter(plant => {
-    if (!plant || !plant.name) return false;
-    return plant.name.toLowerCase().includes(searchTerm.toLowerCase());
-  });
+  const filteredPlants = plants.filter(plant =>
+    plant.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div>
@@ -81,7 +75,7 @@ function App() {
           <p>{plant.species || ''}</p>
           <p>${plant.price}</p>
           <button
-            onClick={() => handleToggleStock(plant.id, plant.inStock)}
+            onClick={() => handleToggleStock(plant.id)}
             data-testid={`stock-button-${plant.id}`}
           >
             {plant.inStock ? 'In Stock' : 'Out of Stock'}
