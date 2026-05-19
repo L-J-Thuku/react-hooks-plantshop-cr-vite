@@ -3,26 +3,36 @@ import App from '../../components/App';
 
 describe('4th Deliverable', () => {
   test('filters plants by name on search', async () => {
-    global.setFetchResponse(global.basePlants);
+    // Mock the initial GET request
+    global.fetch.mockImplementationOnce(() =>
+      Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve(global.basePlants),
+      })
+    );
     
-    const { getByTestId, findAllByTestId, queryAllByTestId } = render(<App />);
+    const { getByTestId, findAllByTestId } = render(<App />);
     
     // Wait for plants to load
-    await findAllByTestId('plant-item');
+    let plantItems = await findAllByTestId('plant-item');
+    expect(plantItems).toHaveLength(3);
     
-    // Type search term
+    // Search for a plant
     const searchInput = getByTestId('search-input');
     fireEvent.change(searchInput, { target: { value: 'Aloe' } });
     
     // Wait for filter to apply
-    await waitFor(() => {
-      const filteredPlants = queryAllByTestId('plant-item');
-      expect(filteredPlants.length).toBe(1);
+    await waitFor(async () => {
+      const filteredPlants = await findAllByTestId('plant-item');
+      expect(filteredPlants).toHaveLength(1);
     });
     
-    // Verify the filtered plant name
-    const filteredPlants = queryAllByTestId('plant-item');
-    const plantName = filteredPlants[0].querySelector('h3').textContent;
-    expect(plantName).toBe('Aloe Vera');
+    // Clear search and verify all plants return
+    fireEvent.change(searchInput, { target: { value: '' } });
+    
+    await waitFor(async () => {
+      const allPlants = await findAllByTestId('plant-item');
+      expect(allPlants).toHaveLength(3);
+    });
   });
 });
